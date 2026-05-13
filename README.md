@@ -24,47 +24,62 @@ RegisterNumber: 212225040118
 ```
 ```
 import pandas as pd
-data=pd.read_csv("Employee.csv")
-print("data.head():")
-data.head()
-print("data.info():")
-data.info()
-print("isnull() and sum():")
-data.isnull().sum()
-print("data value counts():")
-data["left"].value_counts()
-from sklearn.preprocessing import LabelEncoder
-le=LabelEncoder()
-print("data.head() for Salary:")
-data["salary"]=le.fit_transform(data["salary"])
-data.head()
-print("x.head():")
-x=data[["satisfaction_level","last_evaluation","number_project","average_montly_hours","time_spend_company","Work_ac
-x.head()
-y=data["left"]
-from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=100)
-from sklearn.tree import DecisionTreeClassifier
-dt=DecisionTreeClassifier(criterion="entropy")
-dt.fit(x_train,y_train)
-y_pred=dt.predict(x_test)
-print("Accuracy value:")
-from sklearn import metriccore(y_test,y_pred)
-accuracy
-print("Data Prediction:")s
-accuracy=metrics.accuracy_s
-dt.predict([[0.5,0.8,9,260,6,0,1,2]])
-from sklearn.tree import plot_tree
 import matplotlib.pyplot as plt
-plt.figure(figsize=(8,6))
-plot_tree(dt, feature_names=x.columns, class_names=['salary', 'left'], filled=True)
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+file_path =("C:/Users/acer/Downloads/Employee.csv")
+df = pd.read_csv(file_path)
+print("Dataset Columns:", df.columns.tolist())
+
+if 'salary' in df.columns:
+    salary_mapping = {'low': 0, 'medium': 1, 'high': 2}
+    df['salary'] = df['salary'].map(salary_mapping)
+
+df = pd.get_dummies(df, drop_first=True)
+
+target_col = 'left' 
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = DecisionTreeClassifier(criterion='entropy', max_depth=3, random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print(f"\nAccuracy Score: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+plt.figure(figsize=(6, 4))
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+plt.figure(figsize=(20, 10))
+plot_tree(model, 
+          feature_names=X.columns, 
+          class_names=['Stayed', 'Left'], 
+          filled=True, 
+          rounded=True,
+          fontsize=10)
+plt.title("Employee Churn Decision Tree Logic")
 plt.show()
 ```
 
 ## Output:
 
-![decision tree classifier model](555504203-22f46d1d-c779-4521-9277-7f9a6c6ce4e6.png)
+<img width="813" height="636" alt="Screenshot 2026-05-13 091542" src="https://github.com/user-attachments/assets/77f2fecb-f445-4d8b-b4ba-03540a969513" />
 
+<img width="1387" height="623" alt="Screenshot 2026-05-13 091557" src="https://github.com/user-attachments/assets/94a1811d-e4f4-4316-af77-22233ccbfefd" />
+
+Result:
+
+Thus the program to implement the Decision Tree Classifier Model for Predicting Employee Churn is written and verified using python programming.
 
 
 ## Result:
