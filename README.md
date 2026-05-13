@@ -62,8 +62,9 @@ plt.show()
 ```
 
 ## Output:
-![decision tree classifier model](sam.png)
+
 ![decision tree classifier model](555504203-22f46d1d-c779-4521-9277-7f9a6c6ce4e6.png)
+
 
 
 ## Result:
